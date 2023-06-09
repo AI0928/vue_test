@@ -14,6 +14,7 @@
             <div class="card__content">
                 {{post.content}}
             </div>
+            <button @click="deleteBtn(post.id)">削除</button>
         </div>
     </div>
 </template>
@@ -45,11 +46,11 @@ export default {
         executeMethod(yes) {
             // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
             this.createPost = false;
-            if (yes) {
-                alert("はい が押されました。");
-            } else {
-                alert("いいえ が押されました。");
-            }
+            this.$router.go({path: this.$router.currentRoute.path, force: true})
+        },
+        deleteBtn(id){
+            axios.delete('http://localhost:3030/posts/' + id)
+            this.$router.go({path: this.$router.currentRoute.path, force: true})
         }
     },
     //ページがロードされたときに実行する

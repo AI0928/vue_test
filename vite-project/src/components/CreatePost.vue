@@ -1,8 +1,12 @@
 <template>
     <div class="overlay">
         <div class="content">
-            <h1>CreatePost</h1>
-            <button class="modal__btn" @click="returnTrue()">はい</button>
+            <button class="btn--blue" @click="returnFalse()">キャンセル</button>
+            <form @submit.prevent="createPost">
+                <textarea class="textarea-content" v-model="post.content" placeholder="content"></textarea>
+                <input class="btn-submit" type="submit">
+            </form>
+            
         </div>
         
     </div>
@@ -10,14 +14,28 @@
 
 <script>
 export default {
+    data(){
+        return{
+            post: {
+                content: null,
+                user_id: 1,
+            }
+        }
+    },
     methods: {
-    returnFalse() {
-      this.$emit("execute-method", false);
+        returnFalse() {
+            this.$emit("execute-method", false);
+        },
+        createPost(){
+            var json = JSON.stringify(this.post);
+            axios.post('http://localhost:3030/posts', json,{
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            this.$emit("execute-method", true);
+        }
     },
-    returnTrue() {
-      this.$emit("execute-method", true);
-    },
-  },
 }
 </script>
 
@@ -42,8 +60,40 @@ export default {
 
 .content{
   z-index:2;
-  width:50%;
+  width:60%;
+  height:50%;
   padding: 1em;
   background:#fff;
+}
+
+.btn--blue {
+  color: #fff;
+  background-color: #1da1f2;
+  width: 20%;
+  margin-bottom: 20px;
+}
+
+.btn-submit{
+  display: block;
+  padding: 7px 25px;
+  border-radius: 7px;
+  border: none;
+  border-bottom: 4px solid #1d7dcc;
+  background-color: #2196f3;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  appearance: none;
+}
+.btn-submit:active {
+  margin-top: 3px;
+  background-color: #309bf2;
+  border-bottom: 2px solid #006366;
+}
+
+.textarea-content{
+  width:70%;
+  height:300px;
 }
 </style>
